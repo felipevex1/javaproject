@@ -3,7 +3,7 @@ package br.com.spectral.gui;
 import br.com.spectral.dao.ContaCorrenteDao;
 import br.com.spectral.model.ContaCorrente;
 
-
+import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,8 +20,8 @@ public class GuiContaCorrente implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         //System.out.println("You clicked me!");
+        List<ContaCorrente> contas = new ContaCorrenteDao().getLista();
         ContaCorrente cc = new ContaCorrente();
-
         try {
             new ContaCorrenteDao().gravar(cc);
         } catch (IOException e) {
