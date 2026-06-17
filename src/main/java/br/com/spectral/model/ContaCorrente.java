@@ -64,4 +64,8 @@ public class ContaCorrente {
         return lancamentos;
     }
 
+    @Override
+    public String toString() {
+        return this.numero.toString();
+    }
 }

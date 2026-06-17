@@ -3,7 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -11,28 +12,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox prefHeight="361.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.spectral.gui.GuiContaCorrente">
+<HBox prefHeight="361.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.spectral.gui.GuiLancamento">
    <children>
-      <VBox prefHeight="361.0" prefWidth="221.0">
-         <children>
-            <ListView fx:id="lstContas" onKeyPressed="#lstContasKeyPressed" onMouseClicked="#lstContasMouseClicked" prefHeight="283.0" prefWidth="221.0">
-               <VBox.margin>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </VBox.margin>
-            </ListView>
-            <HBox alignment="TOP_RIGHT" prefHeight="72.0" prefWidth="221.0" spacing="10.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#btnLancamentoAction" text="Lançamentos" />
-                  <Button mnemonicParsing="false" onAction="#btnIncluirAction" text="Incluir" />
-               </children>
-               <VBox.margin>
-                  <Insets right="8.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox prefHeight="361.0" prefWidth="470.0">
+      <VBox prefHeight="361.0" prefWidth="359.0">
          <children>
             <GridPane prefHeight="116.0" prefWidth="470.0">
               <columnConstraints>
@@ -56,18 +38,43 @@
                   <Insets left="8.0" right="8.0" />
                </VBox.margin>
             </GridPane>
-            <HBox alignment="TOP_RIGHT" prefHeight="51.0" prefWidth="470.0" spacing="10.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#btnGravarAction" text="Gravar" />
-               </children>
+            <HBox alignment="BOTTOM_LEFT" prefHeight="42.0" prefWidth="351.0" spacing="10.0">
                <VBox.margin>
-                  <Insets right="8.0" />
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </VBox.margin>
+               <children>
+                  <Label text="Valor" />
+                  <TextField />
+                  <Button mnemonicParsing="false" onAction="#btnDebitar" text="Debitar" />
+                  <Button mnemonicParsing="false" onAction="#btnCreditar" text="Creditar" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding>
             </HBox>
+            <TableView fx:id="tblLancamento" fixedCellSize="0.0" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="colData" prefWidth="102.0" text="Data" />
+                <TableColumn fx:id="colHora" prefWidth="102.0" text="Hora" />
+                  <TableColumn fx:id="colValor" minWidth="0.0" prefWidth="150.0" text="Valor" />
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding>
+            </TableView>
          </children>
          <HBox.margin>
             <Insets right="8.0" />
          </HBox.margin>
       </VBox>
    </children>
+   <padding>
+      <Insets left="8.0" />
+   </padding>
 </HBox>
