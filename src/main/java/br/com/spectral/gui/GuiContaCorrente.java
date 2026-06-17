@@ -1,5 +1,10 @@
 package br.com.spectral.gui;
 
+import br.com.spectral.dao.ContaCorrenteDao;
+import br.com.spectral.model.ContaCorrente;
+
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -14,8 +19,16 @@ public class GuiContaCorrente implements Initializable {
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+        //System.out.println("You clicked me!");
+        ContaCorrente cc = new ContaCorrente();
+
+        try {
+            new ContaCorrenteDao().gravar(cc);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        label.setText("Fim!");
     }
     
     @Override
