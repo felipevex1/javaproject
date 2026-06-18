@@ -1,1 +1,9 @@
-<list/>
+<list>
+  <br.com.spectral.model.ContaCorrente>
+    <numero>1</numero>
+    <saldo>0.0</saldo>
+    <idCliente>1</idCliente>
+    <lancamentos/>
+    <limite>300.0</limite>
+  </br.com.spectral.model.ContaCorrente>
+</list>

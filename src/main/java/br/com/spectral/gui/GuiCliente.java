@@ -1,6 +1,5 @@
 package br.com.spectral.gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -53,7 +52,7 @@ public class GuiCliente implements Initializable {
         try {
             cliente = new Cliente(nome, cpf);
             new ClienteDao().gravar(cliente);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }
@@ -70,7 +69,7 @@ public class GuiCliente implements Initializable {
         }
         try {
             new ClienteDao().deletar(cliente);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }

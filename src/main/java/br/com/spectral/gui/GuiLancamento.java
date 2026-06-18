@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import br.com.spectral.dao.ContaCorrenteDao;
 import br.com.spectral.dao.ContaPoupancaDao;
 import br.com.spectral.dao.ContaSalarioDao;
+import br.com.spectral.dao.LancamentoDao;
 import br.com.spectral.model.Conta;
 import br.com.spectral.model.ContaCorrente;
 import br.com.spectral.model.ContaPoupanca;
@@ -27,6 +28,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class GuiLancamento implements Initializable {
     private Conta conta;
+    private String contaTipo;
 
     @FXML
     private TableView<Lancamento> tblLancamentos;
@@ -49,7 +51,10 @@ public class GuiLancamento implements Initializable {
     private void btnDebitarAction(ActionEvent event) {
         try {
             Double valor = Double.parseDouble(txtValor.getText());
+            int qtdAntes = conta.getLancamentos().size();
             conta.debitar(valor);
+            Lancamento novo = conta.getLancamentos().get(qtdAntes);
+            new LancamentoDao().gravar(novo, conta.getNumero(), contaTipo);
             salvarConta();
         } catch (Exception e) {
             exibirMensagem(e.getMessage());
@@ -62,7 +67,10 @@ public class GuiLancamento implements Initializable {
     private void btnCreditarAction(ActionEvent event) {
         try {
             Double valor = Double.parseDouble(txtValor.getText());
+            int qtdAntes = conta.getLancamentos().size();
             conta.creditar(valor);
+            Lancamento novo = conta.getLancamentos().get(qtdAntes);
+            new LancamentoDao().gravar(novo, conta.getNumero(), contaTipo);
             salvarConta();
         } catch (Exception e) {
             exibirMensagem(e.getMessage());
@@ -71,30 +79,37 @@ public class GuiLancamento implements Initializable {
         txtSaldo.setText(conta.getSaldo().toString());
     }
 
-    private void salvarConta() throws Exception {
+    private void salvarConta() {
         if (conta instanceof ContaCorrente) {
-            new ContaCorrenteDao().alterar();
+            new ContaCorrenteDao().alterar((ContaCorrente) conta);
         } else if (conta instanceof ContaPoupanca) {
-            new ContaPoupancaDao().alterar();
+            new ContaPoupancaDao().alterar((ContaPoupanca) conta);
         } else if (conta instanceof ContaSalario) {
-            new ContaSalarioDao().alterar();
+            new ContaSalarioDao().alterar((ContaSalario) conta);
         }
     }
 
     public void setConta(Conta conta) {
         this.conta = conta;
-        txtNumero.setText(conta.getNumero().toString());
-        txtSaldo.setText(conta.getSaldo().toString());
         if (conta instanceof ContaCorrente) {
+            contaTipo = "CORRENTE";
             txtLimite.setText(((ContaCorrente) conta).getLimite().toString());
             txtLimite.setDisable(false);
         } else if (conta instanceof ContaPoupanca) {
+            contaTipo = "POUPANCA";
             txtLimite.setText(((ContaPoupanca) conta).getTaxaRendimento().toString());
             txtLimite.setDisable(false);
         } else {
+            contaTipo = "SALARIO";
             txtLimite.setText("0.0");
             txtLimite.setDisable(true);
         }
+        txtNumero.setText(conta.getNumero().toString());
+        txtSaldo.setText(conta.getSaldo().toString());
+
+        // Carrega lancamentos do banco
+        List<Lancamento> doBanco = new LancamentoDao().getLista(conta.getNumero(), contaTipo);
+        conta.setLancamentos(new java.util.ArrayList<>(doBanco));
         preencherLista();
     }
 

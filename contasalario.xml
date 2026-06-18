@@ -1,1 +1,14 @@
-<list/>
+<list>
+  <br.com.spectral.model.ContaSalario>
+    <numero>1</numero>
+    <saldo>3000.0</saldo>
+    <idCliente>1</idCliente>
+    <lancamentos>
+      <br.com.spectral.model.LancamentoCredito>
+        <dataOcorrencia>2026-06-18</dataOcorrencia>
+        <horaOcorrencia>18:27:30.5692604</horaOcorrencia>
+        <valor>3000.0</valor>
+      </br.com.spectral.model.LancamentoCredito>
+    </lancamentos>
+  </br.com.spectral.model.ContaSalario>
+</list>

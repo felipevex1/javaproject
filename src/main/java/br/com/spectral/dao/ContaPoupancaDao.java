@@ -1,64 +1,85 @@
 package br.com.spectral.dao;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.thoughtworks.xstream.XStream;
-
+import br.com.spectral.db.ConexaoDB;
 import br.com.spectral.model.ContaPoupanca;
 
 public class ContaPoupancaDao {
-    private static String arquivo = "contapoupanca.xml";
-    private static List<ContaPoupanca> contas = new ArrayList<ContaPoupanca>();
 
     public List<ContaPoupanca> getLista() {
-        XStream xs = new XStream();
-        File f = new File(arquivo);
-        if (!(f.exists())) {
-            return new ArrayList<ContaPoupanca>();
-        }
-        contas = (List<ContaPoupanca>) xs.fromXML(f);
-        int proximo = 0;
-        for (ContaPoupanca c : contas) {
-            if (c.getNumero() > proximo) {
-                proximo = c.getNumero();
+        List<ContaPoupanca> contas = new ArrayList<>();
+        String sql = "SELECT numero, saldo, taxa_rendimento, id_cliente FROM conta_poupanca ORDER BY numero";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ContaPoupanca c = new ContaPoupanca();
+                c.setNumero(rs.getInt("numero"));
+                c.setSaldo(rs.getDouble("saldo"));
+                c.setTaxaRendimento(rs.getDouble("taxa_rendimento"));
+                int idCli = rs.getInt("id_cliente");
+                if (!rs.wasNull()) {
+                    c.setIdCliente(idCli);
+                }
+                contas.add(c);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar contas poupanca: " + e.getMessage(), e);
         }
-        ContaPoupanca.setProximoNumero(proximo + 1);
         return contas;
     }
 
-    public void gravar(ContaPoupanca conta) throws IOException {
-        List<ContaPoupanca> lista = getLista();
-        if (lista == null) {
-            lista = new ArrayList<ContaPoupanca>();
+    public void gravar(ContaPoupanca conta) {
+        String sql = "INSERT INTO conta_poupanca (saldo, taxa_rendimento, id_cliente) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setDouble(1, conta.getSaldo());
+            ps.setDouble(2, conta.getTaxaRendimento());
+            if (conta.getIdCliente() != null) {
+                ps.setInt(3, conta.getIdCliente());
+            } else {
+                ps.setNull(3, Types.INTEGER);
+            }
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    conta.setNumero(rs.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao gravar conta poupanca: " + e.getMessage(), e);
         }
-        lista.add(conta);
-        XStream xs = new XStream();
-        String xml = xs.toXML(lista);
-        FileWriter fw = new FileWriter(arquivo);
-        fw.write(xml);
-        fw.close();
     }
 
-    public void alterar() throws IOException {
-        XStream xs = new XStream();
-        String xml = xs.toXML(contas);
-        FileWriter fw = new FileWriter(arquivo);
-        fw.write(xml);
-        fw.close();
+    public void alterar(ContaPoupanca conta) {
+        String sql = "UPDATE conta_poupanca SET saldo = ?, taxa_rendimento = ?, id_cliente = ? WHERE numero = ?";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql)) {
+            ps.setDouble(1, conta.getSaldo());
+            ps.setDouble(2, conta.getTaxaRendimento());
+            if (conta.getIdCliente() != null) {
+                ps.setInt(3, conta.getIdCliente());
+            } else {
+                ps.setNull(3, Types.INTEGER);
+            }
+            ps.setInt(4, conta.getNumero());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao alterar conta poupanca: " + e.getMessage(), e);
+        }
     }
 
-    public void deletar(ContaPoupanca conta) throws IOException {
-        List<ContaPoupanca> lista = getLista();
-        lista.removeIf(c -> c.getNumero().equals(conta.getNumero()));
-        XStream xs = new XStream();
-        String xml = xs.toXML(lista);
-        FileWriter fw = new FileWriter(arquivo);
-        fw.write(xml);
-        fw.close();
+    public void deletar(ContaPoupanca conta) {
+        String sql = "DELETE FROM conta_poupanca WHERE numero = ?";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql)) {
+            ps.setInt(1, conta.getNumero());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar conta poupanca: " + e.getMessage(), e);
+        }
     }
 }

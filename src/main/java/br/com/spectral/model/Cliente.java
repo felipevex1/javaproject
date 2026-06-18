@@ -4,22 +4,27 @@ public class Cliente {
     private Integer id;
     private String nome;
     private String cpf;
-    private static Integer proximoId = 1;
 
     public Cliente() {
-        this.id = proximoId;
-        proximoId++;
     }
 
     public Cliente(String nome, String cpf) {
-        this.id = proximoId;
-        proximoId++;
+        this.nome = nome;
+        this.cpf = cpf;
+    }
+
+    public Cliente(Integer id, String nome, String cpf) {
+        this.id = id;
         this.nome = nome;
         this.cpf = cpf;
     }
 
     public Integer getId() {
         return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -36,10 +41,6 @@ public class Cliente {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public static void setProximoId(Integer proximoId) {
-        Cliente.proximoId = proximoId;
     }
 
     @Override

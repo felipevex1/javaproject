@@ -17,8 +17,16 @@ public abstract class Conta {
         return this.numero;
     }
 
+    public void setNumero(Integer numero) {
+        this.numero = numero;
+    }
+
     public Double getSaldo() {
         return this.saldo;
+    }
+
+    public void setSaldo(Double saldo) {
+        this.saldo = saldo;
     }
 
     public Integer getIdCliente() {
@@ -31,6 +39,10 @@ public abstract class Conta {
 
     public List<Lancamento> getLancamentos() {
         return lancamentos;
+    }
+
+    public void setLancamentos(List<Lancamento> lancamentos) {
+        this.lancamentos = lancamentos;
     }
 
     public void creditar(Double valor) {

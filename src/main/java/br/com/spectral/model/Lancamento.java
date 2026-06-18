@@ -1,4 +1,5 @@
 package br.com.spectral.model;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -17,12 +18,19 @@ public abstract class Lancamento {
         return this.dataOcorrencia;
     }
 
+    public void setDataOcorrencia(LocalDate dataOcorrencia) {
+        this.dataOcorrencia = dataOcorrencia;
+    }
+
     public LocalTime getHoraOcorrencia() {
         return this.horaOcorrencia;
+    }
+
+    public void setHoraOcorrencia(LocalTime horaOcorrencia) {
+        this.horaOcorrencia = horaOcorrencia;
     }
 
     public Double getValor() {
         return valor;
     }
-
 }

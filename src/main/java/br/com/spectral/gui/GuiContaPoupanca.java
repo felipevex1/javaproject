@@ -1,6 +1,5 @@
 package br.com.spectral.gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -79,12 +78,12 @@ public class GuiContaPoupanca implements Initializable {
 
     @FXML
     private void btnGravarAction(ActionEvent event) {
-        Double taxa = Double.parseDouble(txtTaxa.getText());
-        Cliente cli = cmbCliente.getValue();
-        conta = new ContaPoupanca(taxa, cli);
         try {
+            Double taxa = Double.parseDouble(txtTaxa.getText());
+            Cliente cli = cmbCliente.getValue();
+            conta = new ContaPoupanca(taxa, cli);
             new ContaPoupancaDao().gravar(conta);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }
@@ -101,7 +100,7 @@ public class GuiContaPoupanca implements Initializable {
         }
         try {
             new ContaPoupancaDao().deletar(conta);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }
@@ -123,7 +122,7 @@ public class GuiContaPoupanca implements Initializable {
         }
         try {
             conta.aplicarRendimento();
-            new ContaPoupancaDao().alterar();
+            new ContaPoupancaDao().alterar(conta);
         } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;

@@ -1,64 +1,72 @@
 package br.com.spectral.dao;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.thoughtworks.xstream.XStream;
-
+import br.com.spectral.db.ConexaoDB;
 import br.com.spectral.model.Cliente;
 
 public class ClienteDao {
-    private static String arquivo = "cliente.xml";
-    private static List<Cliente> clientes = new ArrayList<Cliente>();
 
     public List<Cliente> getLista() {
-        XStream xs = new XStream();
-        File f = new File(arquivo);
-        if (!(f.exists())) {
-            return new ArrayList<Cliente>();
-        }
-        clientes = (List<Cliente>) xs.fromXML(f);
-        int proximo = 0;
-        for (Cliente c : clientes) {
-            if (c.getId() > proximo) {
-                proximo = c.getId();
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT id, nome, cpf FROM cliente ORDER BY id";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Cliente c = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nome"),
+                    rs.getString("cpf")
+                );
+                clientes.add(c);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar clientes: " + e.getMessage(), e);
         }
-        Cliente.setProximoId(proximo + 1);
         return clientes;
     }
 
-    public void gravar(Cliente cliente) throws IOException {
-        List<Cliente> lista = getLista();
-        if (lista == null) {
-            lista = new ArrayList<Cliente>();
+    public void gravar(Cliente cliente) {
+        String sql = "INSERT INTO cliente (nome, cpf) VALUES (?, ?)";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, cliente.getNome());
+            ps.setString(2, cliente.getCpf());
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    cliente.setId(rs.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao gravar cliente: " + e.getMessage(), e);
         }
-        lista.add(cliente);
-        XStream xs = new XStream();
-        String xml = xs.toXML(lista);
-        FileWriter fw = new FileWriter(arquivo);
-        fw.write(xml);
-        fw.close();
     }
 
-    public void alterar() throws IOException {
-        XStream xs = new XStream();
-        String xml = xs.toXML(clientes);
-        FileWriter fw = new FileWriter(arquivo);
-        fw.write(xml);
-        fw.close();
+    public void alterar(Cliente cliente) {
+        String sql = "UPDATE cliente SET nome = ?, cpf = ? WHERE id = ?";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql)) {
+            ps.setString(1, cliente.getNome());
+            ps.setString(2, cliente.getCpf());
+            ps.setInt(3, cliente.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao alterar cliente: " + e.getMessage(), e);
+        }
     }
 
-    public void deletar(Cliente cliente) throws IOException {
-        List<Cliente> lista = getLista();
-        lista.removeIf(c -> c.getId().equals(cliente.getId()));
-        XStream xs = new XStream();
-        String xml = xs.toXML(lista);
-        FileWriter fw = new FileWriter(arquivo);
-        fw.write(xml);
-        fw.close();
+    public void deletar(Cliente cliente) {
+        String sql = "DELETE FROM cliente WHERE id = ?";
+        try (PreparedStatement ps = ConexaoDB.getConexao().prepareStatement(sql)) {
+            ps.setInt(1, cliente.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar cliente: " + e.getMessage(), e);
+        }
     }
 }

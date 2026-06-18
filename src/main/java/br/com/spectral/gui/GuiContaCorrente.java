@@ -1,6 +1,5 @@
 package br.com.spectral.gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -76,12 +75,12 @@ public class GuiContaCorrente implements Initializable {
 
     @FXML
     private void btnGravarAction(ActionEvent event) {
-        Double limite = Double.parseDouble(txtLimite.getText());
-        Cliente cli = cmbCliente.getValue();
-        contaCorrente = new ContaCorrente(limite, cli);
         try {
+            Double limite = Double.parseDouble(txtLimite.getText());
+            Cliente cli = cmbCliente.getValue();
+            contaCorrente = new ContaCorrente(limite, cli);
             new ContaCorrenteDao().gravar(contaCorrente);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }
@@ -98,7 +97,7 @@ public class GuiContaCorrente implements Initializable {
         }
         try {
             new ContaCorrenteDao().deletar(contaCorrente);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }

@@ -2,26 +2,19 @@ package br.com.spectral.model;
 
 public class ContaPoupanca extends Conta {
     private Double taxaRendimento;
-    private static Integer proximoNumero = 1;
 
     public ContaPoupanca() {
         super();
-        this.numero = proximoNumero;
-        proximoNumero++;
         this.taxaRendimento = 0.0;
     }
 
     public ContaPoupanca(Double taxaRendimento) {
         super();
-        this.numero = proximoNumero;
-        proximoNumero++;
         this.taxaRendimento = taxaRendimento;
     }
 
     public ContaPoupanca(Double taxaRendimento, Cliente cliente) {
         super();
-        this.numero = proximoNumero;
-        proximoNumero++;
         this.taxaRendimento = taxaRendimento;
         if (cliente != null) {
             this.idCliente = cliente.getId();
@@ -34,10 +27,6 @@ public class ContaPoupanca extends Conta {
 
     public void setTaxaRendimento(Double taxaRendimento) {
         this.taxaRendimento = taxaRendimento;
-    }
-
-    public static void setProximoNumero(Integer proximoNumero) {
-        ContaPoupanca.proximoNumero = proximoNumero;
     }
 
     @Override

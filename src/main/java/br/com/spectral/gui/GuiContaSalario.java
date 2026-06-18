@@ -1,6 +1,5 @@
 package br.com.spectral.gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -72,11 +71,11 @@ public class GuiContaSalario implements Initializable {
 
     @FXML
     private void btnGravarAction(ActionEvent event) {
-        Cliente cli = cmbCliente.getValue();
-        conta = new ContaSalario(cli);
         try {
+            Cliente cli = cmbCliente.getValue();
+            conta = new ContaSalario(cli);
             new ContaSalarioDao().gravar(conta);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }
@@ -93,7 +92,7 @@ public class GuiContaSalario implements Initializable {
         }
         try {
             new ContaSalarioDao().deletar(conta);
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
             return;
         }

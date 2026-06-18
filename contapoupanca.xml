@@ -1,1 +1,20 @@
-<list/>
+<list>
+  <br.com.spectral.model.ContaPoupanca>
+    <numero>1</numero>
+    <saldo>130.0</saldo>
+    <idCliente>2</idCliente>
+    <lancamentos>
+      <br.com.spectral.model.LancamentoCredito>
+        <dataOcorrencia>2026-06-18</dataOcorrencia>
+        <horaOcorrencia>18:27:44.8734754</horaOcorrencia>
+        <valor>100.0</valor>
+      </br.com.spectral.model.LancamentoCredito>
+      <br.com.spectral.model.LancamentoCredito>
+        <dataOcorrencia>2026-06-18</dataOcorrencia>
+        <horaOcorrencia>18:27:47.2509479</horaOcorrencia>
+        <valor>30.0</valor>
+      </br.com.spectral.model.LancamentoCredito>
+    </lancamentos>
+    <taxaRendimento>30.0</taxaRendimento>
+  </br.com.spectral.model.ContaPoupanca>
+</list>

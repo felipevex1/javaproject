@@ -2,26 +2,19 @@ package br.com.spectral.model;
 
 public class ContaCorrente extends Conta {
     private Double limite;
-    private static Integer proximoNumero = 1;
 
     public ContaCorrente() {
         super();
-        this.numero = proximoNumero;
-        proximoNumero++;
         this.limite = 0.0;
     }
 
     public ContaCorrente(Double limite) {
         super();
-        this.numero = proximoNumero;
-        proximoNumero++;
         this.limite = limite;
     }
 
     public ContaCorrente(Double limite, Cliente cliente) {
         super();
-        this.numero = proximoNumero;
-        proximoNumero++;
         this.limite = limite;
         if (cliente != null) {
             this.idCliente = cliente.getId();
@@ -34,10 +27,6 @@ public class ContaCorrente extends Conta {
 
     public void setLimite(Double limite) {
         this.limite = limite;
-    }
-
-    public static void setProximoNumero(Integer proximoNumero) {
-        ContaCorrente.proximoNumero = proximoNumero;
     }
 
     @Override
