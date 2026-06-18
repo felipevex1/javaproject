@@ -6,6 +6,7 @@ import java.util.List;
 public abstract class Conta {
     protected Integer numero;
     protected Double saldo;
+    protected Integer idCliente;
     protected List<Lancamento> lancamentos = new ArrayList<Lancamento>();
 
     public Conta() {
@@ -18,6 +19,14 @@ public abstract class Conta {
 
     public Double getSaldo() {
         return this.saldo;
+    }
+
+    public Integer getIdCliente() {
+        return this.idCliente;
+    }
+
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
 
     public List<Lancamento> getLancamentos() {

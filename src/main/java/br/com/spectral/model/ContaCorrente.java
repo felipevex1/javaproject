@@ -18,6 +18,16 @@ public class ContaCorrente extends Conta {
         this.limite = limite;
     }
 
+    public ContaCorrente(Double limite, Cliente cliente) {
+        super();
+        this.numero = proximoNumero;
+        proximoNumero++;
+        this.limite = limite;
+        if (cliente != null) {
+            this.idCliente = cliente.getId();
+        }
+    }
+
     public Double getLimite() {
         return this.limite;
     }

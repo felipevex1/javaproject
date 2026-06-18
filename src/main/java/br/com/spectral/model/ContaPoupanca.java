@@ -18,6 +18,16 @@ public class ContaPoupanca extends Conta {
         this.taxaRendimento = taxaRendimento;
     }
 
+    public ContaPoupanca(Double taxaRendimento, Cliente cliente) {
+        super();
+        this.numero = proximoNumero;
+        proximoNumero++;
+        this.taxaRendimento = taxaRendimento;
+        if (cliente != null) {
+            this.idCliente = cliente.getId();
+        }
+    }
+
     public Double getTaxaRendimento() {
         return this.taxaRendimento;
     }

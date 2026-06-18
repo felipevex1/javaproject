@@ -5,7 +5,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import br.com.spectral.dao.ClienteDao;
 import br.com.spectral.dao.ContaSalarioDao;
+import br.com.spectral.model.Cliente;
 import br.com.spectral.model.ContaSalario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +18,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -31,6 +35,10 @@ public class GuiContaSalario implements Initializable {
     private TextField txtNumero;
     @FXML
     private TextField txtSaldo;
+    @FXML
+    private ComboBox<Cliente> cmbCliente;
+    @FXML
+    private Button btnGravar;
 
     @FXML
     private void btnLancamentoAction(ActionEvent event) {
@@ -58,11 +66,14 @@ public class GuiContaSalario implements Initializable {
     private void btnIncluirAction(ActionEvent event) {
         txtNumero.setText("");
         txtSaldo.setText("");
+        cmbCliente.getSelectionModel().clearSelection();
+        btnGravar.setDisable(false);
     }
 
     @FXML
     private void btnGravarAction(ActionEvent event) {
-        conta = new ContaSalario();
+        Cliente cli = cmbCliente.getValue();
+        conta = new ContaSalario(cli);
         try {
             new ContaSalarioDao().gravar(conta);
         } catch (IOException e) {
@@ -70,6 +81,7 @@ public class GuiContaSalario implements Initializable {
             return;
         }
         preencherLista();
+        btnGravar.setDisable(true);
     }
 
     @FXML
@@ -87,6 +99,8 @@ public class GuiContaSalario implements Initializable {
         }
         txtNumero.setText("");
         txtSaldo.setText("");
+        cmbCliente.getSelectionModel().clearSelection();
+        btnGravar.setDisable(true);
         preencherLista();
     }
 
@@ -105,6 +119,21 @@ public class GuiContaSalario implements Initializable {
         if (conta == null) return;
         txtNumero.setText(conta.getNumero().toString());
         txtSaldo.setText(conta.getSaldo().toString());
+        selecionarClienteNoCombo(conta.getIdCliente());
+        btnGravar.setDisable(true);
+    }
+
+    private void selecionarClienteNoCombo(Integer idCliente) {
+        if (idCliente == null) {
+            cmbCliente.getSelectionModel().clearSelection();
+            return;
+        }
+        for (Cliente c : cmbCliente.getItems()) {
+            if (c.getId().equals(idCliente)) {
+                cmbCliente.getSelectionModel().select(c);
+                return;
+            }
+        }
     }
 
     private void preencherLista() {
@@ -113,8 +142,15 @@ public class GuiContaSalario implements Initializable {
         lstContas.setItems(data);
     }
 
+    private void carregarClientes() {
+        List<Cliente> clientes = new ClienteDao().getLista();
+        ObservableList<Cliente> data = FXCollections.observableArrayList(clientes);
+        cmbCliente.setItems(data);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        carregarClientes();
         preencherLista();
     }
 

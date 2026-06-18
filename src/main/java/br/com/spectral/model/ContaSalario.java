@@ -9,6 +9,15 @@ public class ContaSalario extends Conta {
         proximoNumero++;
     }
 
+    public ContaSalario(Cliente cliente) {
+        super();
+        this.numero = proximoNumero;
+        proximoNumero++;
+        if (cliente != null) {
+            this.idCliente = cliente.getId();
+        }
+    }
+
     public static void setProximoNumero(Integer proximoNumero) {
         ContaSalario.proximoNumero = proximoNumero;
     }

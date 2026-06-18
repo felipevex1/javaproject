@@ -25,6 +25,11 @@ public class GuiPrincipal {
         abrirTela("/fxml/GuiContaSalario.fxml", "Conta Salario");
     }
 
+    @FXML
+    private void btnClientesAction(ActionEvent event) {
+        abrirTela("/fxml/GuiCliente.fxml", "Clientes");
+    }
+
     private void abrirTela(String fxml, String titulo) {
         try {
             FXMLLoader floader = new FXMLLoader(getClass().getResource(fxml));
