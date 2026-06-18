@@ -1,16 +1,15 @@
 package br.com.spectral.gui;
 
-import br.com.spectral.dao.ContaCorrenteDao;
-import br.com.spectral.model.ContaCorrente;
-import br.com.spectral.model.Lancamento;
-
-import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import br.com.spectral.dao.ContaCorrenteDao;
+import br.com.spectral.model.ContaCorrente;
+import br.com.spectral.model.Lancamento;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -45,27 +44,38 @@ public class GuiLancamento implements Initializable {
 
     @FXML
     private void btnDebitarAction(ActionEvent event) { 
-        Double valor = Double.parseDouble(txtValor.getText());
-        contaCorrente.debitar(valor);
+        
         try {
+            Double valor = Double.parseDouble(txtValor.getText());
+            contaCorrente.debitar(valor);
             new ContaCorrenteDao().alterar();
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
         }
         preencherLista();
+        txtSaldo.setText(contaCorrente.getSaldo().toString());
     }
     @FXML
     private void btnCreditarAction(ActionEvent event) { 
-        Double valor = Double.parseDouble(txtValor.getText());
-        contaCorrente.creditar(valor);
+        
         try {
+            Double valor = Double.parseDouble(txtValor.getText());
+            contaCorrente.creditar(valor);
             new ContaCorrenteDao().alterar();
-        } catch (IOException e) {
+        } catch (Exception e) {
             exibirMensagem(e.getMessage());
         }
         preencherLista();
+        txtSaldo.setText(contaCorrente.getSaldo().toString());
     }
 
+    public void setContaCorrente(ContaCorrente contaCorrente) {
+        this.contaCorrente = contaCorrente;
+        txtNumero.setText(contaCorrente.getNumero().toString());
+        txtLimite.setText(contaCorrente.getLimite().toString());
+        txtSaldo.setText(contaCorrente.getSaldo().toString());
+        preencherLista();
+    }
     private void preencherLista (){
         List<Lancamento> lancamentos = contaCorrente.getLancamentos();
         ObservableList<Lancamento> data = FXCollections.observableArrayList(lancamentos);
@@ -78,7 +88,7 @@ public class GuiLancamento implements Initializable {
         colHora.setCellValueFactory(new PropertyValueFactory<Lancamento, LocalTime>("horaOcorrencia"));
         colValor.setCellValueFactory(new PropertyValueFactory<Lancamento, Double>("valor"));
         
-        preencherLista();
+        //preencherLista();
     }    
 
     private void exibirMensagem(String mensagem) {

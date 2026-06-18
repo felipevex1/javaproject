@@ -1,13 +1,12 @@
 package br.com.spectral.gui;
 
-import br.com.spectral.dao.ContaCorrenteDao;
-import br.com.spectral.model.ContaCorrente;
-
-import java.util.List;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import br.com.spectral.dao.ContaCorrenteDao;
+import br.com.spectral.model.ContaCorrente;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,17 +37,24 @@ public class GuiContaCorrente implements Initializable {
 
     @FXML
     private void btnLancamentoAction(ActionEvent event) {
-        getContaCorrente();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/GuiLancamento.fxml"));
-        
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
-        
-        Stage stage = new Stage();
-        stage.setTitle("Lançamentos");
-        stage.setScene(scene);
-        stage.show();
-        
+        try {
+            getContaCorrente();
+            FXMLLoader floader = new FXMLLoader(getClass().getResource("/fxml/GuiLancamento.fxml"));
+            Parent root = (Parent) floader.load();
+            GuiLancamento guiLancamento = floader.<GuiLancamento>getController();
+            guiLancamento.setContaCorrente(contaCorrente);
+
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/Styles.css");
+            
+            Stage stage = new Stage();
+            stage.setTitle("Lançamentos");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            exibirMensagem(e.getMessage());
+        }
     }
     @FXML
     private void btnIncluirAction(ActionEvent event) {

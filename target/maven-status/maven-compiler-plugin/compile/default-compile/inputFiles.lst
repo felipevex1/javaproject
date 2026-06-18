@@ -1,3 +1,9 @@
-C:\Users\fsoares\financeiro\src\main\java\br\com\spectral\EntryPoint.java
-C:\Users\fsoares\financeiro\src\main\java\br\com\spectral\FXMLController.java
-C:\Users\fsoares\financeiro\src\main\java\br\com\spectral\Main.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\EntryPoint.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\model\LancamentoCredito.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\model\LancamentoDebito.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\model\ContaCorrente.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\gui\GuiLancamento.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\model\Lancamento.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\gui\GuiContaCorrente.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\dao\ContaCorrenteDao.java
+C:\Users\Felipe Soares\javaproject\src\main\java\br\com\spectral\Main.java
