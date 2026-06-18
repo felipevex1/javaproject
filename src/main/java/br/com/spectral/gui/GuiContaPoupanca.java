@@ -5,8 +5,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import br.com.spectral.dao.ContaCorrenteDao;
-import br.com.spectral.model.ContaCorrente;
+import br.com.spectral.dao.ContaPoupancaDao;
+import br.com.spectral.model.ContaPoupanca;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,30 +22,30 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class GuiContaCorrente implements Initializable {
-    private ContaCorrente contaCorrente;
+public class GuiContaPoupanca implements Initializable {
+    private ContaPoupanca conta;
 
     @FXML
-    private ListView<ContaCorrente> lstContas;
+    private ListView<ContaPoupanca> lstContas;
     @FXML
     private TextField txtNumero;
     @FXML
-    private TextField txtLimite;
+    private TextField txtTaxa;
     @FXML
     private TextField txtSaldo;
 
     @FXML
     private void btnLancamentoAction(ActionEvent event) {
         try {
-            getContaCorrente();
-            if (contaCorrente == null) {
+            getConta();
+            if (conta == null) {
                 exibirMensagem("Selecione uma conta.");
                 return;
             }
             FXMLLoader floader = new FXMLLoader(getClass().getResource("/fxml/GuiLancamento.fxml"));
             Parent root = (Parent) floader.load();
             GuiLancamento guiLancamento = floader.<GuiLancamento>getController();
-            guiLancamento.setConta(contaCorrente);
+            guiLancamento.setConta(conta);
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Lancamentos");
@@ -58,18 +58,18 @@ public class GuiContaCorrente implements Initializable {
 
     @FXML
     private void btnIncluirAction(ActionEvent event) {
-        txtLimite.setText("");
+        txtTaxa.setText("");
         txtNumero.setText("");
         txtSaldo.setText("");
-        txtLimite.requestFocus();
+        txtTaxa.requestFocus();
     }
 
     @FXML
     private void btnGravarAction(ActionEvent event) {
-        Double limite = Double.parseDouble(txtLimite.getText());
-        contaCorrente = new ContaCorrente(limite);
+        Double taxa = Double.parseDouble(txtTaxa.getText());
+        conta = new ContaPoupanca(taxa);
         try {
-            new ContaCorrenteDao().gravar(contaCorrente);
+            new ContaPoupancaDao().gravar(conta);
         } catch (IOException e) {
             exibirMensagem(e.getMessage());
             return;
@@ -79,44 +79,61 @@ public class GuiContaCorrente implements Initializable {
 
     @FXML
     private void btnDeletarAction(ActionEvent event) {
-        contaCorrente = lstContas.getSelectionModel().getSelectedItem();
-        if (contaCorrente == null) {
+        conta = lstContas.getSelectionModel().getSelectedItem();
+        if (conta == null) {
             exibirMensagem("Selecione uma conta para deletar.");
             return;
         }
         try {
-            new ContaCorrenteDao().deletar(contaCorrente);
+            new ContaPoupancaDao().deletar(conta);
         } catch (IOException e) {
             exibirMensagem(e.getMessage());
             return;
         }
-        txtLimite.setText("");
+        txtTaxa.setText("");
         txtNumero.setText("");
         txtSaldo.setText("");
         preencherLista();
     }
 
     @FXML
+    private void btnRendimentoAction(ActionEvent event) {
+        conta = lstContas.getSelectionModel().getSelectedItem();
+        if (conta == null) {
+            exibirMensagem("Selecione uma conta para aplicar rendimento.");
+            return;
+        }
+        try {
+            conta.aplicarRendimento();
+            new ContaPoupancaDao().alterar();
+        } catch (Exception e) {
+            exibirMensagem(e.getMessage());
+            return;
+        }
+        txtSaldo.setText(conta.getSaldo().toString());
+    }
+
+    @FXML
     private void lstContasKeyPressed(KeyEvent event) {
-        getContaCorrente();
+        getConta();
     }
 
     @FXML
     private void lstContasMouseClicked(MouseEvent event) {
-        getContaCorrente();
+        getConta();
     }
 
-    private void getContaCorrente() {
-        contaCorrente = lstContas.getSelectionModel().getSelectedItem();
-        if (contaCorrente == null) return;
-        txtLimite.setText(contaCorrente.getLimite().toString());
-        txtNumero.setText(contaCorrente.getNumero().toString());
-        txtSaldo.setText(contaCorrente.getSaldo().toString());
+    private void getConta() {
+        conta = lstContas.getSelectionModel().getSelectedItem();
+        if (conta == null) return;
+        txtTaxa.setText(conta.getTaxaRendimento().toString());
+        txtNumero.setText(conta.getNumero().toString());
+        txtSaldo.setText(conta.getSaldo().toString());
     }
 
     private void preencherLista() {
-        List<ContaCorrente> contas = new ContaCorrenteDao().getLista();
-        ObservableList<ContaCorrente> data = FXCollections.observableArrayList(contas);
+        List<ContaPoupanca> contas = new ContaPoupancaDao().getLista();
+        ObservableList<ContaPoupanca> data = FXCollections.observableArrayList(contas);
         lstContas.setItems(data);
     }
 

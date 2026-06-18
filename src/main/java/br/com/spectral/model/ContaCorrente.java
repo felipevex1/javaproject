@@ -1,37 +1,21 @@
 package br.com.spectral.model;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ContaCorrente {
-    private Integer numero;
-    private Double saldo;
+public class ContaCorrente extends Conta {
     private Double limite;
     private static Integer proximoNumero = 1;
 
-    private List<Lancamento> lancamentos = new ArrayList<Lancamento>();
-
-    public ContaCorrente () {
+    public ContaCorrente() {
+        super();
         this.numero = proximoNumero;
         proximoNumero++;
-
-        this.saldo = 0.0;
         this.limite = 0.0;
     }
 
-    public ContaCorrente (Double limite) {
+    public ContaCorrente(Double limite) {
+        super();
         this.numero = proximoNumero;
         proximoNumero++;
-
-        this.saldo = 0.0;
         this.limite = limite;
-    }
-
-    public Double getSaldo() {
-        return this.saldo;
-    }
-
-    public Integer getNumero() {
-        return this.numero;
     }
 
     public Double getLimite() {
@@ -46,26 +30,12 @@ public class ContaCorrente {
         ContaCorrente.proximoNumero = proximoNumero;
     }
 
-    public void creditar(Double valor) {
-        lancamentos.add(new LancamentoCredito(valor));
-        this.saldo += valor;
-    }
-
+    @Override
     public void debitar(Double valor) {
         if ((this.saldo + this.limite) < valor) {
             throw new IllegalArgumentException("Saldo insuficiente");
         }
-
         lancamentos.add(new LancamentoDebito(valor));
         this.saldo -= valor;
-    }
-
-    public List<Lancamento> getLancamentos() {
-        return lancamentos;
-    }
-
-    @Override
-    public String toString() {
-        return this.numero.toString();
     }
 }

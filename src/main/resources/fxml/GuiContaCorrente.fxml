@@ -25,6 +25,7 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#btnLancamentoAction" text="Lançamentos" />
                   <Button mnemonicParsing="false" onAction="#btnIncluirAction" text="Incluir" />
+                  <Button mnemonicParsing="false" onAction="#btnDeletarAction" text="Deletar" />
                </children>
                <VBox.margin>
                   <Insets right="8.0" />
@@ -70,4 +71,5 @@
          </HBox.margin>
       </VBox>
    </children>
+ 
 </HBox>

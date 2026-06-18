@@ -1,6 +1,5 @@
 package br.com.spectral.gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,7 +7,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import br.com.spectral.dao.ContaCorrenteDao;
+import br.com.spectral.dao.ContaPoupancaDao;
+import br.com.spectral.dao.ContaSalarioDao;
+import br.com.spectral.model.Conta;
 import br.com.spectral.model.ContaCorrente;
+import br.com.spectral.model.ContaPoupanca;
+import br.com.spectral.model.ContaSalario;
 import br.com.spectral.model.Lancamento;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,17 +26,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class GuiLancamento implements Initializable {
-    private ContaCorrente contaCorrente;
+    private Conta conta;
 
     @FXML
     private TableView<Lancamento> tblLancamentos;
     @FXML
     private TableColumn<Lancamento, LocalDate> colData = new TableColumn<>();
     @FXML
-    private TableColumn<Lancamento, LocalTime> colHora = new TableColumn<>();   
+    private TableColumn<Lancamento, LocalTime> colHora = new TableColumn<>();
     @FXML
     private TableColumn<Lancamento, Double> colValor = new TableColumn<>();
-
     @FXML
     private TextField txtNumero;
     @FXML
@@ -43,41 +46,60 @@ public class GuiLancamento implements Initializable {
     private TextField txtValor;
 
     @FXML
-    private void btnDebitarAction(ActionEvent event) { 
-        
+    private void btnDebitarAction(ActionEvent event) {
         try {
             Double valor = Double.parseDouble(txtValor.getText());
-            contaCorrente.debitar(valor);
-            new ContaCorrenteDao().alterar();
+            conta.debitar(valor);
+            salvarConta();
         } catch (Exception e) {
             exibirMensagem(e.getMessage());
         }
         preencherLista();
-        txtSaldo.setText(contaCorrente.getSaldo().toString());
-    }
-    @FXML
-    private void btnCreditarAction(ActionEvent event) { 
-        
-        try {
-            Double valor = Double.parseDouble(txtValor.getText());
-            contaCorrente.creditar(valor);
-            new ContaCorrenteDao().alterar();
-        } catch (Exception e) {
-            exibirMensagem(e.getMessage());
-        }
-        preencherLista();
-        txtSaldo.setText(contaCorrente.getSaldo().toString());
+        txtSaldo.setText(conta.getSaldo().toString());
     }
 
-    public void setContaCorrente(ContaCorrente contaCorrente) {
-        this.contaCorrente = contaCorrente;
-        txtNumero.setText(contaCorrente.getNumero().toString());
-        txtLimite.setText(contaCorrente.getLimite().toString());
-        txtSaldo.setText(contaCorrente.getSaldo().toString());
+    @FXML
+    private void btnCreditarAction(ActionEvent event) {
+        try {
+            Double valor = Double.parseDouble(txtValor.getText());
+            conta.creditar(valor);
+            salvarConta();
+        } catch (Exception e) {
+            exibirMensagem(e.getMessage());
+        }
+        preencherLista();
+        txtSaldo.setText(conta.getSaldo().toString());
+    }
+
+    private void salvarConta() throws Exception {
+        if (conta instanceof ContaCorrente) {
+            new ContaCorrenteDao().alterar();
+        } else if (conta instanceof ContaPoupanca) {
+            new ContaPoupancaDao().alterar();
+        } else if (conta instanceof ContaSalario) {
+            new ContaSalarioDao().alterar();
+        }
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
+        txtNumero.setText(conta.getNumero().toString());
+        txtSaldo.setText(conta.getSaldo().toString());
+        if (conta instanceof ContaCorrente) {
+            txtLimite.setText(((ContaCorrente) conta).getLimite().toString());
+            txtLimite.setDisable(false);
+        } else if (conta instanceof ContaPoupanca) {
+            txtLimite.setText(((ContaPoupanca) conta).getTaxaRendimento().toString());
+            txtLimite.setDisable(false);
+        } else {
+            txtLimite.setText("0.0");
+            txtLimite.setDisable(true);
+        }
         preencherLista();
     }
-    private void preencherLista (){
-        List<Lancamento> lancamentos = contaCorrente.getLancamentos();
+
+    private void preencherLista() {
+        List<Lancamento> lancamentos = conta.getLancamentos();
         ObservableList<Lancamento> data = FXCollections.observableArrayList(lancamentos);
         tblLancamentos.setItems(data);
     }
@@ -87,9 +109,7 @@ public class GuiLancamento implements Initializable {
         colData.setCellValueFactory(new PropertyValueFactory<Lancamento, LocalDate>("dataOcorrencia"));
         colHora.setCellValueFactory(new PropertyValueFactory<Lancamento, LocalTime>("horaOcorrencia"));
         colValor.setCellValueFactory(new PropertyValueFactory<Lancamento, Double>("valor"));
-        
-        //preencherLista();
-    }    
+    }
 
     private void exibirMensagem(String mensagem) {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);

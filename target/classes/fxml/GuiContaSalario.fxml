@@ -11,21 +11,34 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox prefHeight="361.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.spectral.gui.GuiContaCorrente">
+<HBox prefHeight="361.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.spectral.gui.GuiContaSalario">
    <children>
       <VBox prefHeight="361.0" prefWidth="221.0">
          <children>
-            <ListView fx:id="lstContas" onKeyPressed="#lstContasKeyPressed" onMouseClicked="#lstContasMouseClicked" prefHeight="283.0" prefWidth="221.0">
+            <ListView
+               fx:id="lstContas"
+               onKeyPressed="#lstContasKeyPressed"
+               onMouseClicked="#lstContasMouseClicked"
+               prefHeight="283.0"
+               prefWidth="221.0">
                <VBox.margin>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </VBox.margin>
             </ListView>
             <HBox alignment="TOP_RIGHT" prefHeight="72.0" prefWidth="221.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#btnLancamentoAction" text="Lançamentos" />
-                  <Button mnemonicParsing="false" onAction="#btnIncluirAction" text="Incluir" />
-                  <Button mnemonicParsing="false" onAction="#btnDeletarAction" text="Deletar" />
+                  <Button
+                     mnemonicParsing="false"
+                     onAction="#btnLancamentoAction"
+                     text="Lancamentos" />
+                  <Button
+                     mnemonicParsing="false"
+                     onAction="#btnIncluirAction"
+                     text="Incluir" />
+                  <Button
+                     mnemonicParsing="false"
+                     onAction="#btnDeletarAction"
+                     text="Deletar" />
                </children>
                <VBox.margin>
                   <Insets right="8.0" />
@@ -43,15 +56,12 @@
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Número" />
-                  <Label text="Limite" GridPane.rowIndex="1" />
-                  <Label text="Saldo" GridPane.rowIndex="2" />
+                  <Label text="Numero" />
+                  <Label text="Saldo" GridPane.rowIndex="1" />
                   <TextField fx:id="txtNumero" editable="false" GridPane.columnIndex="1" />
-                  <TextField fx:id="txtLimite" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="txtSaldo" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtSaldo" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
                <VBox.margin>
                   <Insets left="8.0" right="8.0" />
@@ -59,7 +69,10 @@
             </GridPane>
             <HBox alignment="TOP_RIGHT" prefHeight="51.0" prefWidth="470.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#btnGravarAction" text="Gravar" />
+                  <Button
+                     mnemonicParsing="false"
+                     onAction="#btnGravarAction"
+                     text="Gravar" />
                </children>
                <VBox.margin>
                   <Insets right="8.0" />
@@ -71,5 +84,4 @@
          </HBox.margin>
       </VBox>
    </children>
- 
 </HBox>

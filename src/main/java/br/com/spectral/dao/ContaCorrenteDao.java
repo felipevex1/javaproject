@@ -59,4 +59,16 @@ public class ContaCorrenteDao {
         fw.close();
     }
 
+    //adicionado
+    public void deletar(ContaCorrente contaCorrente) throws IOException {
+        List<ContaCorrente> contas = getLista();
+        contas.removeIf(c -> c.getNumero().equals(contaCorrente.getNumero()));
+        XStream xs = new XStream();
+        String xml = xs.toXML(contas);
+        FileWriter fw = new FileWriter(arquivo);
+        fw.write(xml);
+        fw.close();
+    }
+
+
 }
